@@ -1,0 +1,12 @@
+language: python
+
+python:
+  - "2.7"
+
+install:
+  - pip install ansible
+  - ansible-galaxy install xcezx.zabbix-repository
+
+script:
+  - echo localhost > inventory
+  - ansible-playbook -i inventory --syntax-check test.yml
