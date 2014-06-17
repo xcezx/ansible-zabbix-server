@@ -1,0 +1,6 @@
+# {{ ansible_managed }}
+{% for key, value in zabbix_server_settings.iteritems() %}
+{%   if value %}
+{{ key | e }}={{ value | e }}
+{%   endif %}
+{% endfor %}
