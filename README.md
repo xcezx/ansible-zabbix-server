@@ -3,6 +3,12 @@ zabbix-server [![Build Status](https://travis-ci.org/xcezx/ansible-zabbix-server
 
 install and configuration zabbix-server
 
+Requirements
+------------
+
+- `mysqld`
+- `MySQL-python`
+
 Role Variables
 --------------
 

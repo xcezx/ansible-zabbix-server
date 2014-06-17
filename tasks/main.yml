@@ -22,3 +22,55 @@
     group: zabbix
     mode: 0640
   notify: restart zabbix-server
+
+- name: check installed zabbix-server-mysql version
+  shell: zabbix_server_mysql --version | awk '/Zabbix/{ sub(/v/, "", $3); print $3 }'
+  register: installed_version
+
+- name: create zabbix database
+  mysql_db:
+    encoding: utf8
+    login_host: "{{ login_host }}"
+    login_password: "{{ login_password }}"
+    login_port: "{{ login_port }}"
+    login_user: "{{ login_user }}"
+    name: "{{ zabbix_server_settings.DBName }}"
+    state: present
+
+- name: create zabbix database user
+  mysql_user:
+    host: "localhost"
+    login_host: "{{ login_host }}"
+    login_password: "{{ login_password }}"
+    login_port: "{{ login_port }}"
+    login_user: "{{ login_user }}"
+    name: "{{ zabbix_server_settings.DBUser }}"
+    password: "{{ zabbix_server_settings.DBPassword }}"
+    priv: "{{ zabbix_server_settings.DBName }}.*:ALL"
+    state: present
+
+- name: table exists?
+  command: >
+    mysql --host={{ zabbix_server_settings.DBHost }}
+          --password={{ zabbix_server_settings.DBPassword }}
+          --port={{ zabbix_server_settings.DBPort }}
+          --user={{ zabbix_server_settings.DBUser }}
+          {{ zabbix_server_settings.DBName }}
+          --execute='SHOW TABLES'
+  register: table_exists
+
+- name: migration zabbix database
+  mysql_db:
+    encoding: utf8
+    login_host: "{{ login_host }}"
+    login_password: "{{ login_password }}"
+    login_port: "{{ login_port }}"
+    login_user: "{{ login_user }}"
+    name: "{{ zabbix_server_settings.DBName }}"
+    state: import
+    target: "{{ item }}"
+  with_items:
+    - /usr/share/doc/zabbix-server-mysql-{{ installed_version.stdout }}/create/schema.sql
+    - /usr/share/doc/zabbix-server-mysql-{{ installed_version.stdout }}/create/images.sql
+    - /usr/share/doc/zabbix-server-mysql-{{ installed_version.stdout }}/create/data.sql
+  when: table_exists.stdout.find('user_history') == -1
