@@ -23,54 +23,57 @@
     mode: 0640
   notify: restart zabbix-server
 
-- name: check installed zabbix-server-mysql version
-  shell: zabbix_server_mysql --version | awk '/Zabbix/{ sub(/v/, "", $3); print $3 }'
-  register: installed_version
+- name: create zabbix database user
+  mysql_user:
+    login_host: "{{ zabbix_server_database_login_host }}"
+    login_password: "{{ zabbix_server_database_login_password }}"
+    login_port: "{{ zabbix_server_database_login_port }}"
+    login_user: "{{ zabbix_server_database_login_user }}"
+    host: "{{ zabbix_server_database_host }}"
+    name: "{{ zabbix_server_DBUser }}"
+    password: "{{ zabbix_server_DBPassword }}"
+    priv: "{{ zabbix_server_DBName }}.*:ALL"
+    state: present
 
 - name: create zabbix database
   mysql_db:
     encoding: utf8
-    login_host: "{{ login_host }}"
-    login_password: "{{ login_password }}"
-    login_port: "{{ login_port }}"
-    login_user: "{{ login_user }}"
-    name: "{{ zabbix_server_settings.DBName }}"
+    login_host: "{{ zabbix_server_database_login_host }}"
+    login_password: "{{ zabbix_server_database_login_password }}"
+    login_port: "{{ zabbix_server_database_login_port }}"
+    login_user: "{{ zabbix_server_database_login_user }}"
+    name: "{{ zabbix_server_DBName }}"
     state: present
 
-- name: create zabbix database user
-  mysql_user:
-    host: "localhost"
-    login_host: "{{ login_host }}"
-    login_password: "{{ login_password }}"
-    login_port: "{{ login_port }}"
-    login_user: "{{ login_user }}"
-    name: "{{ zabbix_server_settings.DBUser }}"
-    password: "{{ zabbix_server_settings.DBPassword }}"
-    priv: "{{ zabbix_server_settings.DBName }}.*:ALL"
-    state: present
+- name: check installed zabbix-server-mysql version
+  shell: zabbix_server_mysql --version | awk '/Zabbix/{ sub(/v/, "", $3); print $3 }'
+  register: installed_version
 
 - name: table exists?
   command: >
-    mysql --host={{ zabbix_server_settings.DBHost }}
-          --password={{ zabbix_server_settings.DBPassword }}
-          --port={{ zabbix_server_settings.DBPort }}
-          --user={{ zabbix_server_settings.DBUser }}
-          {{ zabbix_server_settings.DBName }}
+    mysql --host={{ zabbix_server_DBHost }}
+          --password={{ zabbix_server_DBPassword }}
+          --port={{ zabbix_server_DBPort }}
+          --user={{ zabbix_server_DBUser }}
+          {{ zabbix_server_DBName }}
           --execute='SHOW TABLES'
   register: table_exists
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ zabbix_server_mysql_bindir }}"
 
 - name: migration zabbix database
   mysql_db:
-    encoding: utf8
-    login_host: "{{ login_host }}"
-    login_password: "{{ login_password }}"
-    login_port: "{{ login_port }}"
-    login_user: "{{ login_user }}"
-    name: "{{ zabbix_server_settings.DBName }}"
+    login_host: "{{ zabbix_server_database_login_host }}"
+    login_user: "{{ zabbix_server_database_login_user }}"
+    login_password: "{{ zabbix_server_database_login_password }}"
+    login_port: "{{ zabbix_server_database_login_port }}"
+    name: "{{ zabbix_server_DBName }}"
     state: import
     target: "{{ item }}"
   with_items:
     - /usr/share/doc/zabbix-server-mysql-{{ installed_version.stdout }}/create/schema.sql
     - /usr/share/doc/zabbix-server-mysql-{{ installed_version.stdout }}/create/images.sql
     - /usr/share/doc/zabbix-server-mysql-{{ installed_version.stdout }}/create/data.sql
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ zabbix_server_mysql_bindir }}"
   when: table_exists.stdout.find('user_history') == -1

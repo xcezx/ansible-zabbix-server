@@ -3,66 +3,68 @@ zabbix_server_install_packages:
   - { name: zabbix-server, enablerepo: zabbix }
   - { name: zabbix-get, enablerepo: zabbix }
 
-zabbix_server_settings:
-    AlertScriptsPath: "/usr/lib/zabbix/alertscripts"
-    AllowRoot: 0
-    CacheSize: "8M"
-    CacheUpdateFrequency: 60
-    DBHost: "localhost"
-    DBName: "zabbix"
-    DBPassword: "zabbix"
-    DBPort: 3306
-    DBSchema: ~
-    DBSocket: "/var/lib/mysql/mysql.sock"
-    DBUser: "zabbix"
-    DebugLevel: 3
-    ExternalScripts: "/usr/lib/zabbix/externalscripts"
-    Fping6Location: "/usr/sbin/fping6"
-    FpingLocation: "/usr/sbin/fping"
-    HistoryCacheSize: "8M"
-    HistoryTextCacheSize: "16M"
-    HousekeepingFrequency: 1
-    Include: ~
-    JavaGateway: ~
-    JavaGatewayPort: 10052
-    ListenIP: "0.0.0.0"
-    ListenPort: 10051
-    LoadModule: ~
-    LoadModulePath: ~
-    LogFile: "/var/log/zabbix/zabbix_server.log"
-    LogFileSize: 0
-    LogSlowQueries: 0
-    MaxHousekeeperDelete: 500
-    NodeID: 0
-    NodeNoEvents: 0
-    NodeNoHistory: 0
-    PidFile: "/var/run/zabbix/zabbix_server.pid"
-    ProxyConfigFrequency: 3600
-    ProxyDataFrequency: 1
-    SenderFrequency: 30
-    SNMPTrapperFile: "/var/log/snmptt.log"
-    SourceIP: ~
-    SSHKeyLocation: ~
-    StartDBSyncers: 4
-    StartDiscoverers: 1
-    StartHTTPPollers: 1
-    StartIPMIPollers: 0
-    StartJavaPollers: 0
-    StartPingers: 1
-    StartPollersUnreachable: 1
-    StartPollers: 5
-    StartProxyPollers: 1
-    StartSNMPTrapper: 0
-    StartTimers: 1
-    StartTrappers: 5
-    StartVMwareCollectors: 0
-    Timeout: 3
-    TmpDir: "/tmp"
-    TrapperTimeout: 300
-    TrendCacheSize: "4M"
-    UnavailableDelay: 60
-    UnreachableDelay: 15
-    UnreachablePeriod: 45
-    ValueCacheSize: "8M"
-    VMwareCacheSize: "8M"
-    VMwareFrequency: 60
+zabbix_server_AlertScriptsPath: "/usr/lib/zabbix/alertscripts"
+zabbix_server_AllowRoot: "0"
+zabbix_server_CacheSize: "8M"
+zabbix_server_CacheUpdateFrequency: "60"
+zabbix_server_DBHost: "localhost"
+zabbix_server_DBName: "zabbix"
+zabbix_server_DBPassword: "zabbix"
+zabbix_server_DBPort: "3306"
+zabbix_server_DBSchema: ~
+zabbix_server_DBSocket: "/var/lib/mysql/mysql.sock"
+zabbix_server_DebugLevel: "3"
+zabbix_server_ExternalScripts: "/usr/lib/zabbix/externalscripts"
+zabbix_server_Fping6Location: "/usr/sbin/fping6"
+zabbix_server_FpingLocation: "/usr/sbin/fping"
+zabbix_server_HistoryCacheSize: "8M"
+zabbix_server_HistoryTextCacheSize: "16M"
+zabbix_server_HousekeepingFrequency: "1"
+zabbix_server_Include: []
+zabbix_server_JavaGateway: ~
+zabbix_server_JavaGatewayPort: "10052"
+zabbix_server_ListenIP: "0.0.0.0"
+zabbix_server_ListenPort: "10051"
+zabbix_server_LoadModule: ~
+zabbix_server_LoadModulePath: "${libdir}/modules"
+zabbix_server_LogFile: "/var/log/zabbix/zabbix_server.log"
+zabbix_server_LogFileSize: "0"
+zabbix_server_LogSlowQueries: "0"
+zabbix_server_MaxHousekeeperDelete: "500"
+zabbix_server_NodeID: "0"
+zabbix_server_NodeNoEvents: "0"
+zabbix_server_NodeNoHistory: "0"
+zabbix_server_PidFile: "/var/run/zabbix/zabbix_server.pid"
+zabbix_server_ProxyConfigFrequency: "3600"
+zabbix_server_ProxyDataFrequency: "1"
+zabbix_server_SNMPTrapperFile: "/var/log/snmptt/snmptt.log"
+zabbix_server_SSHKeyLocation: ~
+zabbix_server_SSLCALocation: ~
+zabbix_server_SSLCertLocation: "${datadir}/zabbix/ssl/certs"
+zabbix_server_SSLKeyLocation: "${datadir}/zabbix/ssl/keys"
+zabbix_server_SenderFrequency: "30"
+zabbix_server_SourceIP: ~
+zabbix_server_StartDBSyncers: "4"
+zabbix_server_StartDiscoverers: "1"
+zabbix_server_StartHTTPPollers: "1"
+zabbix_server_StartIPMIPollers: "0"
+zabbix_server_StartJavaPollers: "0"
+zabbix_server_StartPingers: "1"
+zabbix_server_StartPollers: "5"
+zabbix_server_StartPollersUnreachable: "1"
+zabbix_server_StartProxyPollers: "1"
+zabbix_server_StartSNMPTrapper: "0"
+zabbix_server_StartTimers: "1"
+zabbix_server_StartTrappers: "5"
+zabbix_server_StartVMwareCollectors: "0"
+zabbix_server_Timeout: "3"
+zabbix_server_TmpDir: "/tmp"
+zabbix_server_TrapperTimeout: "300"
+zabbix_server_TrendCacheSize: "4M"
+zabbix_server_UnavailableDelay: "60"
+zabbix_server_UnreachableDelay: "15"
+zabbix_server_UnreachablePeriod: "45"
+zabbix_server_User: "zabbix"
+zabbix_server_VMwareCacheSize: "8M"
+zabbix_server_VMwareFrequency: "60"
+zabbix_server_ValueCacheSize: "8M"
