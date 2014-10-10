@@ -6,13 +6,6 @@
     state: present
   with_items: zabbix_server_install_packages
 
-- name: ensure started zabbix-server
-  sudo: yes
-  service:
-    name: zabbix-server
-    state: started
-    enabled: yes
-
 - name: configure zabbix-server.conf
   sudo: yes
   template:
@@ -22,6 +15,13 @@
     group: zabbix
     mode: 0640
   notify: restart zabbix-server
+
+- name: ensure started zabbix-server
+  sudo: yes
+  service:
+    name: zabbix-server
+    state: started
+    enabled: yes
 
 - name: create zabbix database user
   mysql_user:
